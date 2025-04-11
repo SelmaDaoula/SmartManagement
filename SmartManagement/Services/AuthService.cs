@@ -19,22 +19,17 @@ namespace SmartManagement.Services
         // Méthode d'authentification
         public User Authenticate(string login, string motDePasse)
         {
-            // Vérifiez si _context est null
             if (_context == null)
-            {
                 throw new InvalidOperationException("Le contexte de la base de données n'a pas été initialisé.");
-            }
 
             var user = _context.Users.FirstOrDefault(u => u.Login == login && u.MotDePasse == motDePasse);
 
-            // Vérifiez si l'utilisateur est null
             if (user == null)
-            {
-                throw new InvalidOperationException("Aucun utilisateur trouvé avec ces identifiants.");
-            }
+                throw new UnauthorizedAccessException("Nom d'utilisateur ou mot de passe incorrect.");
 
             return user;
         }
+
     }
 
 }
