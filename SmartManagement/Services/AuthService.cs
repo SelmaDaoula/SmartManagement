@@ -22,10 +22,19 @@ namespace SmartManagement.Services
             if (_context == null)
                 throw new InvalidOperationException("Le contexte de la base de données n'a pas été initialisé.");
 
-            var user = _context.Users.FirstOrDefault(u => u.Login == login && u.MotDePasse == motDePasse);
+            // Vérifier d'abord si le login existe
+            var user = _context.Users.FirstOrDefault(u => u.Login == login);
 
             if (user == null)
-                throw new UnauthorizedAccessException("Nom d'utilisateur ou mot de passe incorrect.");
+            {
+                throw new Exception("Login incorrect"); // Spécifique au login
+            }
+
+            // Si le login existe, vérifier le mot de passe
+            if (user.MotDePasse != motDePasse)
+            {
+                throw new Exception("Mot de passe incorrect"); // Spécifique au mot de passe
+            }
 
             return user;
         }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartManagement.Models;
 
@@ -10,9 +11,11 @@ using SmartManagement.Models;
 namespace SmartManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250420103514_AjoutTablesStock")]
+    partial class AjoutTablesStock
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.4");
@@ -58,7 +61,7 @@ namespace SmartManagement.Migrations
                     b.ToTable("MouvementsStock");
                 });
 
-            modelBuilder.Entity("SmartManagement.Models.Product", b =>
+            modelBuilder.Entity("SmartManagement.Models.Produit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,7 +137,7 @@ namespace SmartManagement.Migrations
 
             modelBuilder.Entity("SmartManagement.Models.MouvementStock", b =>
                 {
-                    b.HasOne("SmartManagement.Models.Product", "Produit")
+                    b.HasOne("SmartManagement.Models.Produit", "Produit")
                         .WithMany()
                         .HasForeignKey("ProduitId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -143,7 +146,7 @@ namespace SmartManagement.Migrations
                     b.Navigation("Produit");
                 });
 
-            modelBuilder.Entity("SmartManagement.Models.Product", b =>
+            modelBuilder.Entity("SmartManagement.Models.Produit", b =>
                 {
                     b.HasOne("SmartManagement.Models.Categorie", "Categorie")
                         .WithMany("Produits")

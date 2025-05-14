@@ -8,26 +8,40 @@ namespace SmartManagement.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Product> Produits { get; set; }
+        public DbSet<Categorie> Categories { get; set; }
+        public DbSet<MouvementStock> MouvementsStock { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Chemin relatif vers la DB dans le dossier Models/
-            var dbPath = Path.Combine("Models", "smartmanagement.db");
+            // 🔄 Chemin relatif depuis le répertoire d'exécution (bin/Debug/...)
+            var relativePath = Path.Combine("..", "..", "..", "Models", "smartmanagement.db");
 
-            // Affiche le chemin absolu pour débogage (à supprimer en production)
-            Console.WriteLine($"Chemin de la base de données : {Path.GetFullPath(dbPath)}");
+            // 🧼 Convertir en chemin absolu propre
+            var dbPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, relativePath));
+
+            // 🐞 Affiche le chemin utilisé pour déboguer
+            Console.WriteLine($"📁 Chemin de la base de données : {dbPath}");
 
             optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configuration supplémentaire des modèles si nécessaire
-            // Exemple : Définir des relations ou contraintes
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
                 .WithMany()
                 .HasForeignKey(u => u.RoleId);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Categorie)
+                .WithMany(c => c.Produits)
+                .HasForeignKey(p => p.CategorieId);
+
+            modelBuilder.Entity<MouvementStock>()
+                .HasOne(m => m.Produit)
+                .WithMany()
+                .HasForeignKey(m => m.ProduitId);
         }
     }
 }
